@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="@{'Conversation ' + ${conversation.getName()}}"></title>
+</head>
+<body>
+    <ul id="message-list">
+        <li th:each="message : ${conversation.getMessages()}">
+            <div th:if="${message.getType() == T(com.intheloop.chat.domain.Message).TEXT}">
+                <h3 th:text="${message.getUser().getUsername()}"></h3>
+                <p th:text="${message.getContent()}"></p>
+            </div>
+        </li>
+    </ul>
+    <form>
+        <input type="text" maxlength="255" id="content" name="content">
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="/js/stomp.min.js"></script>
+    <script src="/js/conversation.js"></script>
+</body>
+</html>

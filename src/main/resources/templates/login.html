@@ -7,14 +7,12 @@
 <body>
     <form id="main-form" action="/login" method="post">
         <h2>Login</h2>
-
         <div th:if="${param.keySet().contains('logout')}">
             <p>Successfully logged out</p>
         </div>
         <div th:if="${param.keySet().contains('error')}">
             <p>Wrong credentials</p>
         </div>
-
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" class="field">

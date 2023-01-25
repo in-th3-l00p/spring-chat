@@ -17,6 +17,9 @@ public class Conversation {
     @ManyToMany
     private Set<User> users;
 
+    @OneToMany(mappedBy = "conversation")
+    private Set<Message> messages;
+
     public Conversation() {
     }
 
@@ -42,5 +45,13 @@ public class Conversation {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
     }
 }

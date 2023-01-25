@@ -1,4 +1,4 @@
-package com.intheloop.chat.security;
+package com.intheloop.chat.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +15,10 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/conversations")
+                    .defaultSuccessUrl("/conversation/list")
                 .and()
                 .authorizeHttpRequests(authorized -> authorized
-                        .requestMatchers("/login", "/register", "/api/public/**").permitAll()
+                        .requestMatchers("/login", "/register", "/error", "/api/public/**").permitAll()
                         .requestMatchers("/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 );

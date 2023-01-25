@@ -24,6 +24,9 @@ public class Message {
     @OneToOne
     private User user;
 
+    @ManyToOne
+    private Conversation conversation;
+
     public Message() {
     }
 
@@ -57,5 +60,13 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Conversation getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(Conversation conversation) {
+        this.conversation = conversation;
     }
 }

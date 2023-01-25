@@ -5,10 +5,13 @@
     <title>Conversations</title>
 </head>
 <body>
-    <button onclick="window.location = '/conversations/create'">Add</button>
+    <button onclick="window.location = '/conversation/create'">Add</button>
     <ul>
         <li th:each="conversation : ${conversations}">
-            <a th:text="${conversation.getName()}"></a>
+            <a
+                    th:text="${conversation.getName()}"
+                    th:href="@{/conversation/{id}(id=${conversation.getId()})}">
+            </a>
         </li>
     </ul>
 </body>
