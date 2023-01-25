@@ -15,7 +15,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/")
+                    .defaultSuccessUrl("/conversations")
                 .and()
                 .authorizeHttpRequests(authorized -> authorized
                         .requestMatchers("/login", "/register", "/api/public/**").permitAll()
