@@ -14,10 +14,10 @@ public class Conversation {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> users;
 
-    @OneToMany(mappedBy = "conversation")
+    @OneToMany(mappedBy = "conversation", fetch = FetchType.EAGER)
     private Set<Message> messages;
 
     public Conversation() {

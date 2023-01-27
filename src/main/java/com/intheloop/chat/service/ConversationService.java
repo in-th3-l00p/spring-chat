@@ -37,6 +37,7 @@ public class ConversationService {
     }
 
     public Message addMessage(Conversation conversation, Message message) {
+        message.setConversation(conversation);
         message = messageRepository.save(message);
         Set<Message> messages = conversation.getMessages();
         messages.add(message);

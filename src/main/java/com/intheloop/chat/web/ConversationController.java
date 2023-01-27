@@ -1,19 +1,12 @@
 package com.intheloop.chat.web;
 
 import com.intheloop.chat.domain.Conversation;
-import com.intheloop.chat.domain.Message;
 import com.intheloop.chat.domain.User;
 import com.intheloop.chat.service.ConversationService;
 import com.intheloop.chat.service.UserService;
-import com.intheloop.chat.service.dto.MessageDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -29,16 +22,13 @@ import java.util.Set;
 public class ConversationController {
     private final ConversationService conversationService;
     private final UserService userService;
-    private final SimpMessagingTemplate messagingTemplate;
 
     public ConversationController(
             ConversationService conversationService,
-            UserService userService,
-            SimpMessagingTemplate simpMessagingTemplate
+            UserService userService
     ) {
         this.conversationService = conversationService;
         this.userService = userService;
-        this.messagingTemplate = simpMessagingTemplate;
     }
 
     @NoArgsConstructor
@@ -107,33 +97,5 @@ public class ConversationController {
         }
 
         return "redirect:/conversation/list";
-    }
-
-    @MessageMapping("/chat/{conversationId}")
-    public void sendMessage(
-            SimpMessageHeaderAccessor header,
-            @DestinationVariable("conversationId") Long conversationId,
-            @Payload MessageDTO messageDTO
-    ) {
-        if (header.getUser() == null || header.getUser().getName() == null)
-            return;
-        User sender;
-        try {
-            sender = userService.loadUserByUsername(header.getUser().getName());
-        } catch (Exception e) {
-            return;
-        }
-
-        Optional<Conversation> conversation = conversationService
-                .getConversation(conversationId);
-        if (conversation.isEmpty() || !conversation.get().getUsers().contains(sender))
-            return;
-
-        Message message = new Message();
-        message.setUser(sender);
-        message.setType(messageDTO.getType());
-        message.setContent(messageDTO.getContent());
-        message = conversationService.addMessage(conversation.get(), message);
-        messagingTemplate.convertAndSend("/topic/" + conversationId, new MessageDTO(message));
     }
 }

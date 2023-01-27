@@ -13,13 +13,13 @@
             </div>
         </li>
     </ul>
-    <form>
+    <form id="input-form">
         <input type="text" maxlength="255" id="content" name="content">
         <button type="submit">Send</button>
     </form>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="/js/sockjs.min.js"></script>
     <script src="/js/stomp.min.js"></script>
-    <script src="/js/conversation.js"></script>
+    <script defer src="/js/conversation.js"></script>
 </body>
 </html>
