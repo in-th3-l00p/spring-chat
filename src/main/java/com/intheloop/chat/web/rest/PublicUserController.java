@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/public/user")
 public class PublicUserController {
@@ -33,5 +35,13 @@ public class PublicUserController {
     private static class RegisterBody {
         private String username;
         private String password;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPublicUser(@RequestParam("userId") Long userId) {
+        Optional<User> userOptional = userService.getUserById(userId);
+        if (userOptional.isEmpty())
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(userOptional.get());
     }
 }

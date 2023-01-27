@@ -38,6 +38,13 @@ public class ConversationController {
         private String name;
     }
 
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    private static class AddUserForm {
+        private String username;
+    }
+
     @GetMapping("/{conversationId}")
     public String conversationPage(
             Model model,
@@ -57,6 +64,7 @@ public class ConversationController {
             return "error/conversationNotAllowed";
         model.addAttribute("currentUser", user);
         model.addAttribute("conversation", conversation.get());
+        model.addAttribute("messages", conversationService.getSortedMessages(conversation.get()));
         return "conversation";
     }
 
@@ -97,5 +105,43 @@ public class ConversationController {
         }
 
         return "redirect:/conversation/list";
+    }
+
+    @GetMapping("/add/{conversationId}")
+    public String addUserToConversationPage(
+            @PathVariable("conversationId") Long conversationId,
+            Model model
+    ) {
+        Optional<Conversation> conversation = conversationService.getConversation(conversationId);
+        if (conversation.isEmpty())
+            return "error/conversationNotFound";
+        model.addAttribute("conversation", conversation.get());
+        model.addAttribute("addUserForm", new AddUserForm());
+        return "conversationAddUser";
+    }
+
+    @PostMapping("/add/{conversationId}")
+    public String addUserToConversation(
+            @PathVariable("conversationId") Long conversationId,
+            @ModelAttribute AddUserForm addUserForm,
+            Authentication authentication
+    ) {
+        User currentUser, addedUser;
+        try {
+            currentUser = userService.loadUserByUsername(authentication.getName());
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
+        try {
+            addedUser = userService.loadUserByUsername(addUserForm.getUsername());
+        } catch (Exception e) {
+            return String.format("redirect:/add/%s?userNotFound", conversationId);
+        }
+        Optional<Conversation> conversation = conversationService.getConversation(conversationId);
+        if (conversation.isEmpty())
+            return "error/conversationNotFound";
+        if (!conversation.get().getUsers().contains(currentUser))
+            return "error/conversationNotAllowed";
+        return "redirect:/conversation/" + conversationId;
     }
 }

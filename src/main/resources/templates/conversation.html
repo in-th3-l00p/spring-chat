@@ -5,9 +5,12 @@
     <title th:text="@{'Conversation ' + ${conversation.getName()}}"></title>
 </head>
 <body>
+    <a th:href="@{/conversation/add/{id}(id=${conversation.getId()})}">
+        <button type="button">Add users</button>
+    </a>
     <ul id="message-list">
-        <li th:each="message : ${conversation.getMessages()}">
-            <div th:if="${message.getType() == T(com.intheloop.chat.domain.Message).TEXT}">
+        <li th:each="message : ${messages}">
+            <div >
                 <h3 th:text="${message.getUser().getUsername()}"></h3>
                 <p th:text="${message.getContent()}"></p>
             </div>

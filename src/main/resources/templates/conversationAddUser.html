@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add user</title>
+</head>
+<body>
+    <form
+            th:action="@{/conversation/add/{id}(id = ${conversation.getId()})}"
+            th:object="${addUserForm}"
+            method="post"
+    >
+        <h2>Add user to "<span th:text="${conversation.getName()}"></span>"</h2>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>

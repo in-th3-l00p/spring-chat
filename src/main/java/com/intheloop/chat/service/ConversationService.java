@@ -5,6 +5,7 @@ import com.intheloop.chat.domain.Message;
 import com.intheloop.chat.domain.User;
 import com.intheloop.chat.repository.ConversationRepository;
 import com.intheloop.chat.repository.MessageRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public class ConversationService {
 
     public Optional<Conversation> getConversation(Long conversationId) {
         return conversationRepository.findById(conversationId);
+    }
+
+    public List<Message> getSortedMessages(Conversation conversation) {
+        return messageRepository
+                .findMessagesByConversationIs(conversation, Sort.by("createdAt"));
     }
 
     public Message addMessage(Conversation conversation, Message message) {
