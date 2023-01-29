@@ -51,4 +51,31 @@ public class ConversationService {
         conversationRepository.save(conversation);
         return message;
     }
+
+    private void deleteConversation(Conversation conversation) {
+        messageRepository.deleteAll(conversation.getMessages());
+        conversationRepository.delete(conversation);
+    }
+
+    public void addUser(Conversation conversation, User user) {
+        if (conversation.getUsers().contains(user))
+            return;
+        Set<User> users = conversation.getUsers();
+        users.add(user);
+        conversation.setUsers(users);
+        conversationRepository.save(conversation);
+    }
+
+    public void removeUser(Conversation conversation, User user) {
+        if (!conversation.getUsers().contains(user))
+            return;
+        Set<User> users = conversation.getUsers();
+        users.remove(user);
+        if (users.size() == 0) {
+            deleteConversation(conversation);
+            return;
+        }
+        conversation.setUsers(users);
+        conversationRepository.save(conversation);
+    }
 }

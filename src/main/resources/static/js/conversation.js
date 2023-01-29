@@ -15,13 +15,15 @@ function onMessageReceived(payload) {
     xhr.open("GET", `/api/public/user?userId=${message.senderId}`, true);
     xhr.onload = (event) => {
         const sender = JSON.parse(event.target.response);
-        const messageElement = document.createElement("div");
+        const messageElement = document.createElement("li");
+        const messageContainer = document.createElement("div");
         const username = document.createElement("h3");
         username.innerText = sender.username;
-        messageElement.appendChild(username);
+        messageContainer.appendChild(username);
         const content = document.createElement("p");
         content.innerText = message.content;
-        messageElement.appendChild(content);
+        messageContainer.appendChild(content);
+        messageElement.appendChild(messageContainer);
         messageList.appendChild(messageElement);
     }
     xhr.send(null);
@@ -32,7 +34,7 @@ function onConnected() {
 }
 
 function onError() {
-    window.location = "/error";
+    console.error("error");
 }
 
 function sendTextMessage(content) {

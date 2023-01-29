@@ -58,7 +58,7 @@ public class ConversationController {
         try {
             user = userService.loadUserByUsername(authentication.getName());
         } catch (Exception exception) {
-            return "redirect:/error";
+            return "redirect:/serverError";
         }
         if (!conversation.get().getUsers().contains(user))
             return "error/conversationNotAllowed";
@@ -74,7 +74,7 @@ public class ConversationController {
             User user = userService.loadUserByUsername(authentication.getName());
             model.addAttribute("conversations", conversationService.getUserConversations(user));
         } catch (UsernameNotFoundException e) {
-            return "redirect:/error";
+            return "redirect:/serverError";
         }
 
         return "conversations";
@@ -101,7 +101,7 @@ public class ConversationController {
             conversation.setUsers(users);
             conversationService.createConversation(conversation);
         } catch (Exception e) {
-            return "redirect:/error";
+            return "redirect:/conversation/list?exists";
         }
 
         return "redirect:/conversation/list";
@@ -126,11 +126,13 @@ public class ConversationController {
             @ModelAttribute AddUserForm addUserForm,
             Authentication authentication
     ) {
+        if (authentication.getName().equals(addUserForm.getUsername()))
+            return "redirect:/conversation/" + conversationId;
         User currentUser, addedUser;
         try {
             currentUser = userService.loadUserByUsername(authentication.getName());
         } catch (Exception e) {
-            return "redirect:/error";
+            return "redirect:/serverError";
         }
         try {
             addedUser = userService.loadUserByUsername(addUserForm.getUsername());
@@ -142,6 +144,30 @@ public class ConversationController {
             return "error/conversationNotFound";
         if (!conversation.get().getUsers().contains(currentUser))
             return "error/conversationNotAllowed";
+
+        conversationService.addUser(conversation.get(), addedUser);
         return "redirect:/conversation/" + conversationId;
+    }
+
+    @PostMapping("/leave/{conversationId}")
+    public String leaveConversation(
+            @PathVariable("conversationId") Long conversationId,
+            Authentication authentication
+    ) {
+        User user;
+        try {
+            user = userService.loadUserByUsername(authentication.getName());
+        } catch (Exception e) {
+            return "redirect:/serverError";
+        }
+
+        Optional<Conversation> conversation = conversationService.getConversation(conversationId);
+        if (conversation.isEmpty())
+            return "error/conversationNotFound";
+        if (!conversation.get().getUsers().contains(user))
+            return "error/conversationNotAllowed";
+
+        conversationService.removeUser(conversation.get(), user);
+        return "redirect:/conversation/list";
     }
 }

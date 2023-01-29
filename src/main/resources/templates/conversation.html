@@ -5,24 +5,32 @@
     <title th:text="@{'Conversation ' + ${conversation.getName()}}"></title>
 </head>
 <body>
-    <a th:href="@{/conversation/add/{id}(id=${conversation.getId()})}">
-        <button type="button">Add users</button>
-    </a>
+    <div>
+        <a th:href="@{/conversation/add/{id}(id=${conversation.getId()})}">
+            <button type="button">Add users</button>
+        </a>
+        <form
+                th:action="@{/conversation/leave/{id}(id=${conversation.getId()})}"
+                method="post"
+        >
+            <button type="submit">Leave</button>
+        </form>
+    </div>
     <ul id="message-list">
         <li th:each="message : ${messages}">
-            <div >
+            <div>
                 <h3 th:text="${message.getUser().getUsername()}"></h3>
                 <p th:text="${message.getContent()}"></p>
             </div>
         </li>
     </ul>
-    <form id="input-form">
+    <form id="input-form" onsubmit="event.preventDefault()">
         <input type="text" maxlength="255" id="content" name="content">
         <button type="submit">Send</button>
     </form>
 
     <script src="/js/sockjs.min.js"></script>
     <script src="/js/stomp.min.js"></script>
-    <script defer src="/js/conversation.js"></script>
+    <script src="/js/conversation.js"></script>
 </body>
 </html>

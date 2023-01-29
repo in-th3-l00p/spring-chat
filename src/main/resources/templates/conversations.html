@@ -5,7 +5,17 @@
     <title>Conversations</title>
 </head>
 <body>
-    <button onclick="window.location = '/conversation/create'">Add</button>
+    <div>
+        <a href="/logout" style="display: inline-block">
+            <button type="button">Logout</button>
+        </a>
+        <a href="/conversation/create" style="display: inline-block">
+            <button type="button">Add</button>
+        </a>
+    </div>
+    <div th:if="${param.keySet().contains('exists')}">
+        <p>The given conversation name is already used</p>
+    </div>
     <ul>
         <li th:each="conversation : ${conversations}">
             <a
