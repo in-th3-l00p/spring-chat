@@ -1,4 +1,4 @@
-# Simple Java Spring Boot
+# Simple Java Spring Boot Chat Application
 No more than a chat application created using Spring.
 
 *Created as the Tier 1 project for Generaţia Tech*
